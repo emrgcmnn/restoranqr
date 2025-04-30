@@ -1,0 +1,50 @@
+.kategori-sayfasi {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.kategori-baslik {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.urun-listesi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.urun-karti {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.urun-resim img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.urun-bilgileri {
+  padding: 15px;
+}
+
+.fiyat {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.ozellikler {
+  margin-top: 10px;
+  color: #666;
+}
+
+.ozellik {
+  margin: 5px 0;
+  font-size: 0.9em;
+}

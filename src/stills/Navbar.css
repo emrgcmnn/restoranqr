@@ -1,0 +1,11 @@
+.navbar {
+  background-color: #3b0a53; /* koyu mor */
+  padding: 1rem 2rem;
+}
+
+.navbar-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
