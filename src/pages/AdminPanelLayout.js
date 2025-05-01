@@ -42,7 +42,7 @@ const AdminPanelLayout = () => {
             <FiHome className="menu-icon" />
             Ana Sayfa
           </Link>
-          
+
           <Link to="/admin-panel/restoran-yonetimi" className="menu-item" onClick={() => setIsMenuOpen(false)}>
             <FiCoffee className="menu-icon" />
             Restoran Yönetimi
@@ -59,6 +59,7 @@ const AdminPanelLayout = () => {
             <FiPackage className="menu-icon" />
             Ürün Yönetimi
           </Link>
+
         </div>
 
         <div className="sidebar-footer">

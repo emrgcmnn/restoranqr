@@ -9,7 +9,6 @@ import AdminPanelLayout from './pages/AdminPanelLayout';
 import AdminPanelAnaSayfa from './pages/AdminPanelAnaSayfa';
 import KategoriDuzenle from './pages/kategori-duzenle';
 import UrunDuzenle from './pages/urun-duzenle';
-import CategoryPage from './component/olus-kategori';
 import RestoranYonetimi from './pages/RestoranYonetimi';
 import LoadingSpinner from './component/LoadingSpinner'; // Yeni eklediğiniz loading component
 
@@ -28,7 +27,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Anasayfa />} />
         <Route path="/admin-giris" element={<AdminGiris />} />
-        <Route path="/kategori/:id" element={<CategoryPage />} />
 
         {/* Tüm admin paneli route'larını ProtectedRoute ile sarma */}
         <Route path="/admin-panel" element={
