@@ -1,17 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
-import { 
-  collection, 
-  getDocs, 
-  doc, 
-  updateDoc, 
-  deleteDoc,
-  addDoc,
-  query,
-  where,
-  writeBatch
-} from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, deleteDoc, addDoc, query, where, writeBatch } from 'firebase/firestore';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import '../stills/urun-duzenle.css';
 
@@ -20,54 +10,46 @@ const UrunDuzenle = () => {
   const [kategoriler, setKategoriler] = useState([]);
   const [seciliUrun, setSeciliUrun] = useState(null);
   const [seciliKategori, setSeciliKategori] = useState('all');
-  const [yeniUrun, setYeniUrun] = useState({
-    isim: '',
-    fiyat: '',
-    kategoriId: '',
-    ozellikler: '',
-    resimUrl: '',
-    sira: 0
-  });
+
+  const fetchData = useCallback(async () => {
+    const urunRef = seciliKategori === 'all' 
+      ? collection(db, 'urunler') 
+      : query(collection(db, 'urunler'), where('kategoriId', '==', seciliKategori));
+
+    const [urunSnap, kategoriSnap] = await Promise.all([
+      getDocs(urunRef),
+      getDocs(collection(db, 'kategoriler'))
+    ]);
+
+    setUrunler(
+      urunSnap.docs
+        .map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+          sira: doc.data().sira || 0
+        }))
+        .sort((a, b) => a.sira - b.sira)
+    );
+
+    setKategoriler(
+      kategoriSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    );
+  }, [seciliKategori]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const urunQuery = seciliKategori === 'all' 
-        ? collection(db, 'urunler')
-        : query(collection(db, 'urunler'), where('kategoriId', '==', seciliKategori));
-      
-      const [urunSnapshot, kategoriSnapshot] = await Promise.all([
-        getDocs(urunQuery),
-        getDocs(collection(db, 'kategoriler'))
-      ]);
-      
-      setUrunler(urunSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data(),
-        sira: doc.data().sira || 0 
-      })).sort((a, b) => a.sira - b.sira));
-      
-      setKategoriler(kategoriSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data() 
-      })));
-    };
-
     fetchData();
-  }, [seciliKategori]);
+  }, [fetchData]);
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-
     const items = Array.from(urunler);
     const [movedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, movedItem);
 
     const batch = writeBatch(db);
-    items.forEach((urun, index) => {
-      const urunRef = doc(db, 'urunler', urun.id);
-      batch.update(urunRef, { sira: index });
+    items.forEach((u, idx) => {
+      batch.update(doc(db, 'urunler', u.id), { sira: idx });
     });
-    
     await batch.commit();
     setUrunler(items);
   };
@@ -75,32 +57,23 @@ const UrunDuzenle = () => {
   const urunSil = async (id) => {
     if (window.confirm('Bu ürünü silmek istediğinize emin misiniz?')) {
       await deleteDoc(doc(db, 'urunler', id));
-      setUrunler(urunler.filter(u => u.id !== id));
+      await fetchData();
     }
   };
 
   const urunEkle = async () => {
-    if (!yeniUrun.kategoriId) {
+    if (!seciliUrun.kategoriId) {
       alert('Lütfen bir kategori seçin');
       return;
     }
-
     const newProduct = {
-      ...yeniUrun,
+      ...seciliUrun,
+      fiyat: Number(seciliUrun.fiyat),
       sira: urunler.length,
-      fiyat: Number(yeniUrun.fiyat)
     };
-
-    const docRef = await addDoc(collection(db, 'urunler'), newProduct);
-    setUrunler([...urunler, { ...newProduct, id: docRef.id }]);
-    setYeniUrun({
-      isim: '',
-      fiyat: '',
-      kategoriId: '',
-      ozellikler: '',
-      resimUrl: '',
-      sira: 0
-    });
+    await addDoc(collection(db, 'urunler'), newProduct);
+    await fetchData();
+    setSeciliUrun(null);
   };
 
   const urunGuncelle = async () => {
@@ -108,7 +81,7 @@ const UrunDuzenle = () => {
       ...seciliUrun,
       fiyat: Number(seciliUrun.fiyat)
     });
-    setUrunler(urunler.map(u => u.id === seciliUrun.id ? seciliUrun : u));
+    await fetchData();
     setSeciliUrun(null);
   };
 
@@ -119,30 +92,27 @@ const UrunDuzenle = () => {
       </Link>
 
       <div className="filtre-ve-ekleme">
-        <select 
-          value={seciliKategori} 
+        <select
+          value={seciliKategori}
           onChange={(e) => setSeciliKategori(e.target.value)}
           className="kategori-filtre"
         >
           <option value="all">Tüm Kategoriler</option>
-          {kategoriler.map(kategori => (
-            <option key={kategori.id} value={kategori.id}>
-              {kategori.isim}
-            </option>
+          {kategoriler.map(k => (
+            <option key={k.id} value={k.id}>{k.isim}</option>
           ))}
         </select>
-
-        <button 
-          onClick={() => setSeciliUrun({ 
-            id: null, 
-            isim: '', 
-            fiyat: '', 
-            kategoriId: seciliKategori !== 'all' ? seciliKategori : '', 
-            ozellikler: '', 
+        <button
+          className="form-button"
+          onClick={() => setSeciliUrun({
+            id: null,
+            isim: '',
+            fiyat: '',
+            kategoriId: seciliKategori !== 'all' ? seciliKategori : (kategoriler[0]?.id || ''),
+            ozellikler: '',
             resimUrl: '',
-            sira: urunler.length 
+            sira: urunler.length,
           })}
-          className="ekle-buton"
         >
           Yeni Ürün Ekle
         </button>
@@ -150,49 +120,36 @@ const UrunDuzenle = () => {
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="urunler">
-          {(provided) => (
+          {provided => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="urun-listesi"
+              className="kategori-listesi"
             >
-              {urunler.map((urun, index) => (
-                // src/pages/UrunDuzenle.js (sadece ilgili kısım)
-<Draggable key={urun.id} draggableId={urun.id} index={index}>
-  {(provided) => (
+              {urunler.map((u, idx) => (
+                // Düzeltilmiş Draggable kısmı
+<Draggable key={u.id} draggableId={u.id} index={idx}>
+  {(provided, snapshot) => ( // Burada snapshot parametresi eklendi
     <div
       ref={provided.innerRef}
       {...provided.draggableProps}
-      className="urun-karti"
+      {...provided.dragHandleProps} // dragHandleProps eklendi
+      className={`kategori-item ${snapshot.isDragging ? 'dragging' : ''}`}
     >
-      <div className="urun-icerik">
-        <img
-          src={urun.resimUrl || 'https://via.placeholder.com/120x120?text=Resim+Yok'}
-          alt={urun.isim}
+      <div className="kategori-icerik">
+        <img 
+          src={u.resimUrl || 'https://via.placeholder.com/120x120?text=Resim+Yok'} 
+          alt={u.isim} 
           className="urun-resmi"
         />
-
         <div className="urun-bilgileri">
-          <h3 className="urun-ad">{urun.isim}</h3>
+          <h3>{u.isim}</h3>
         </div>
-
-        <div className="urun-actions">
-          <button 
-            onClick={() => setSeciliUrun(urun)}
-            className="duzenle-buton"
-          >
-            Düzenle
-          </button>
-          <button 
-            onClick={() => urunSil(urun.id)}
-            className="sil-buton"
-          >
-            Sil
-          </button>
-          <div {...provided.dragHandleProps} className="tasi-buton">
-            Taşı
-          </div>
-        </div>
+      </div>
+      <div className="kategori-butonlar">
+        <button onClick={() => setSeciliUrun(u)}>✏️</button>
+        <button onClick={() => urunSil(u.id)}>🗑️</button>
+        <span className="tasima-etiket">☰</span>
       </div>
     </div>
   )}
@@ -204,21 +161,20 @@ const UrunDuzenle = () => {
         </Droppable>
       </DragDropContext>
 
-      {(seciliUrun !== null) && (
-        <div className="urun-modal">
-          <div className="modal-icerik">
+      {seciliUrun && (
+        <div className="modal-overlay">
+          <div className="kategori-modal">
             <h3>{seciliUrun.id ? 'Ürün Düzenle' : 'Yeni Ürün Ekle'}</h3>
             
             <select
               value={seciliUrun.kategoriId}
-              onChange={e => setSeciliUrun({...seciliUrun, kategoriId: e.target.value})}
+              onChange={e => setSeciliUrun({ ...seciliUrun, kategoriId: e.target.value })}
+              className="form-input"
               required
             >
               <option value="">Kategori Seçin</option>
-              {kategoriler.map(kategori => (
-                <option key={kategori.id} value={kategori.id}>
-                  {kategori.isim}
-                </option>
+              {kategoriler.map(k => (
+                <option key={k.id} value={k.id}>{k.isim}</option>
               ))}
             </select>
 
@@ -226,7 +182,8 @@ const UrunDuzenle = () => {
               type="text"
               placeholder="Ürün Adı"
               value={seciliUrun.isim}
-              onChange={e => setSeciliUrun({...seciliUrun, isim: e.target.value})}
+              onChange={e => setSeciliUrun({ ...seciliUrun, isim: e.target.value })}
+              className="form-input"
               required
             />
 
@@ -234,33 +191,36 @@ const UrunDuzenle = () => {
               type="number"
               placeholder="Fiyat"
               value={seciliUrun.fiyat}
-              onChange={e => setSeciliUrun({...seciliUrun, fiyat: e.target.value})}
+              onChange={e => setSeciliUrun({ ...seciliUrun, fiyat: e.target.value })}
+              className="form-input"
               required
             />
 
             <textarea
-              placeholder="Özellikler (Her özellik yeni satırda)"
+              placeholder="Özellikler (Her satır yeni özellik)"
               value={seciliUrun.ozellikler}
-              onChange={e => setSeciliUrun({...seciliUrun, ozellikler: e.target.value})}
-              rows="3"
+              onChange={e => setSeciliUrun({ ...seciliUrun, ozellikler: e.target.value })}
+              className="form-input"
+              rows={3}
             />
 
             <input
               type="text"
               placeholder="Resim URL"
               value={seciliUrun.resimUrl}
-              onChange={e => setSeciliUrun({...seciliUrun, resimUrl: e.target.value})}
+              onChange={e => setSeciliUrun({ ...seciliUrun, resimUrl: e.target.value })}
+              className="form-input"
             />
 
             <div className="modal-actions">
               <button 
-                onClick={seciliUrun.id ? urunGuncelle : urunEkle}
+                onClick={seciliUrun.id ? urunGuncelle : urunEkle} 
                 className="kaydet-buton"
               >
                 {seciliUrun.id ? 'Güncelle' : 'Ekle'}
               </button>
               <button 
-                onClick={() => setSeciliUrun(null)}
+                onClick={() => setSeciliUrun(null)} 
                 className="iptal-buton"
               >
                 İptal

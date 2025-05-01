@@ -1,45 +1,206 @@
-/* src/stills/kategori-duzenle.css */
 .kategori-duzenle-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  
-  .geri-buton {
-    display: inline-block;
-    padding: 0.8rem 1.5rem;
-    background: #3498db;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
-    margin-bottom: 2rem;
-    transition: background 0.3s ease;
-  }
-  
-  .geri-buton:hover {
-    background: #2980b9;
-  }
-  
-  .kategori-listesi {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 1rem;
-  }
-  
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.kategori-form {
+  display: flex;
+  flex-direction: column; /* Tüm boyutlarda alt alta */
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-button:hover {
+  background: #2980b9;
+}
+
+.kategori-listesi {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kategori-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.kategori-item.dragging {
+  background: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.kategori-icerik {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.kategori-icerik img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.kategori-butonlar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.kategori-butonlar button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s;
+}
+
+.kategori-butonlar button:hover {
+  color: #3498db;
+}
+
+.tasima-etiket {
+  cursor: grab;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  padding: 0.5rem;
+}
+
+/* Modal Stilleri */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.kategori-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.kategori-modal h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.kategori-modal input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.kaydet-buton {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.kaydet-buton:hover {
+  background: #219a52;
+}
+
+.iptal-buton {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.iptal-buton:hover {
+  background: #7f8c8d;
+}
+
+@media (max-width: 768px) {
   .kategori-item {
-    background: white;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
+    /* Eski kodu kaldır */
+    /* flex-direction: column; */
+    /* gap: 1rem; */
+    
+    /* Yeni ekle */
+    padding: 0.8rem;
   }
-  
+
   .kategori-icerik img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-right: 1rem;
+    width: 40px !important;
+    height: 40px !important;
   }
+
+  .kategori-butonlar {
+    /* Eski kodu kaldır */
+    /* width: 100%; */
+    /* justify-content: flex-end; */
+    
+    /* Yeni ekle */
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+  .kategori-form {
+    flex-direction: column;
+  }
+
+  .form-button {
+    width: 100%;
+  }
+}

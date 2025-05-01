@@ -10,6 +10,7 @@ import AdminPanelAnaSayfa from './pages/AdminPanelAnaSayfa';
 import KategoriDuzenle from './pages/kategori-duzenle';
 import UrunDuzenle from './pages/urun-duzenle';
 import CategoryPage from './component/olus-kategori';
+import RestoranYonetimi from './pages/RestoranYonetimi';
 import LoadingSpinner from './component/LoadingSpinner'; // Yeni eklediğiniz loading component
 
 const ProtectedRoute = ({ children }) => {
@@ -38,6 +39,7 @@ function App() {
           <Route index element={<AdminPanelAnaSayfa />} />
           <Route path="kategori-duzenle" element={<KategoriDuzenle />} />
           <Route path="urun-duzenle" element={<UrunDuzenle />} />
+          <Route path="restoran-yonetimi" element={<RestoranYonetimi />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

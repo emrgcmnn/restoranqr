@@ -1,0 +1,70 @@
+/* Bildirim Stilleri */
+.content-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    min-height: 400px;
+    margin-top: 2rem;
+  }
+  .bildirim-listesi {
+    margin-top: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .bildirim-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+  }
+  
+  .bildirim-item:hover {
+    background: #f8f9fa;
+  }
+  
+  .bildirim-icerik {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .masa-no {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 80px;
+  }
+  
+  .zaman {
+    color: #666;
+    font-size: 0.9em;
+  }
+  
+  .tamamla-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .tamamla-btn:hover {
+    background: #219a52;
+    transform: translateY(-1px);
+  }
+  
+  .bos-liste {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+  }
+  .dashboard-title {
+    text-align: center;
+  }
