@@ -10,7 +10,8 @@ import AdminPanelAnaSayfa from './pages/AdminPanelAnaSayfa';
 import KategoriDuzenle from './pages/kategori-duzenle';
 import UrunDuzenle from './pages/urun-duzenle';
 import RestoranYonetimi from './pages/RestoranYonetimi';
-import LoadingSpinner from './component/LoadingSpinner'; // Yeni eklediğiniz loading component
+import GaleriYonetimi from './pages/galeri-yonetimi'; // bileşen adlandırmasına dikkat!
+import LoadingSpinner from './component/LoadingSpinner';
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);
@@ -25,22 +26,33 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Genel sayfalar */}
         <Route path="/" element={<Anasayfa />} />
         <Route path="/admin-giris" element={<AdminGiris />} />
 
-        {/* Tüm admin paneli route'larını ProtectedRoute ile sarma */}
-        <Route path="/admin-panel" element={
-          <ProtectedRoute>
-            <AdminPanelLayout />
-          </ProtectedRoute>
-        }>
+        {/* Admin paneli */}
+        <Route 
+          path="/admin-panel" 
+          element={
+            <ProtectedRoute>
+              <AdminPanelLayout />
+            </ProtectedRoute>
+          }
+        >
+          {/* /admin-panel */}
           <Route index element={<AdminPanelAnaSayfa />} />
+          {/* /admin-panel/kategori-duzenle */}
           <Route path="kategori-duzenle" element={<KategoriDuzenle />} />
+          {/* /admin-panel/urun-duzenle */}
           <Route path="urun-duzenle" element={<UrunDuzenle />} />
+          {/* /admin-panel/restoran-yonetimi */}
           <Route path="restoran-yonetimi" element={<RestoranYonetimi />} />
+          {/* /admin-panel/galeri */}
+          <Route path="galeri" element={<GaleriYonetimi />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* Diğer tüm yollar ana sayfaya */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

@@ -1,6 +1,6 @@
 // src/pages/AdminPanelAnaSayfa.js
 import { Link } from 'react-router-dom';
-import { FiSettings, FiBox, FiUsers,FiCoffee } from 'react-icons/fi';
+import { FiSettings, FiBox, FiUsers,FiCoffee,FiImage } from 'react-icons/fi';
 import '../stills/AdminPanel.css';
 
 const AdminPanelAnaSayfa = () => {
@@ -27,13 +27,24 @@ const AdminPanelAnaSayfa = () => {
           <p>Ürün ekle, düzenle ve kategorilere göre filtrele</p>
         </Link>
         
-                  <Link to="/admin-panel/restoran-yonetimi" className="dashboard-card">
-                      <div className="card-icon-wrapper">
-                        <FiCoffee className="card-icon" />
-                      </div>
-                      <h3>Restoran Yönetimi</h3>
-                      <p>Restoran ayarları ve genel düzenlemeler</p>
-                  </Link>
+        {/* Restoran Yönetimi Kartı */}
+        <Link to="/admin-panel/restoran-yonetimi" className="dashboard-card">
+          <div className="card-icon-wrapper">
+            <FiCoffee className="card-icon" />
+          </div>
+          <h3>Restoran Yönetimi</h3>
+          <p>Restoran ayarları ve genel düzenlemeler</p>
+        </Link>
+
+        {/* Galeri Yönetimi Kartı */}
+        <Link to="/admin-panel/galeri" className="dashboard-card">
+          <div className="card-icon-wrapper">
+            <FiImage className="card-icon" />
+          </div>
+          <h3>Galeri Yönetimi</h3>
+          <p>Resim galerisi ekle, sil ve düzenle</p>
+        </Link>
+
 
         {/* Kullanıcı Yönetimi Kartı (Opsiyonel) */}
         <div className="dashboard-card coming-soon">
