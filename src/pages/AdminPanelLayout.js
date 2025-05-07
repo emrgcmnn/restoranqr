@@ -1,7 +1,7 @@
 // src/pages/AdminPanelLayout.js
 import { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { FiHome, FiList, FiPackage, FiLogOut, FiChevronRight, FiChevronLeft,FiCoffee } from 'react-icons/fi';
+import { FiHome, FiList, FiPackage, FiLogOut, FiChevronRight, FiChevronLeft,FiCoffee,FiImage } from 'react-icons/fi';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import '../stills/AdminPanel.css';
@@ -51,6 +51,11 @@ const AdminPanelLayout = () => {
           <Link to="/admin-panel/kategori-duzenle" className="menu-item" onClick={() => setIsMenuOpen(false)}>
             <FiList className="menu-icon" />
             Kategori Yönetimi
+          </Link>
+
+          <Link to="/admin-panel/galeri" className="menu-item" onClick={() => setIsMenuOpen(false)}>
+            <FiImage className="menu-icon" />
+            Galeri Yönetimi
           </Link>
           
 

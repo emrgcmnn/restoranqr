@@ -10,6 +10,8 @@ const UrunDuzenle = () => {
   const [kategoriler, setKategoriler] = useState([]);
   const [seciliUrun, setSeciliUrun] = useState(null);
   const [seciliKategori, setSeciliKategori] = useState('all');
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [galleryImages, setGalleryImages] = useState([]);
 
   const fetchData = useCallback(async () => {
     const urunRef = seciliKategori === 'all' 
@@ -35,6 +37,11 @@ const UrunDuzenle = () => {
       kategoriSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
     );
   }, [seciliKategori]);
+
+  const fetchGalleryImages = useCallback(async () => {
+    const galeriSnap = await getDocs(collection(db, 'galeri'));
+    setGalleryImages(galeriSnap.docs.map(doc => ({ id: doc.id, image: doc.data().image })));
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -110,7 +117,7 @@ const UrunDuzenle = () => {
             fiyat: '',
             kategoriId: seciliKategori !== 'all' ? seciliKategori : (kategoriler[0]?.id || ''),
             ozellikler: '',
-            resimUrl: '',
+            resim: '',
             sira: urunler.length,
           })}
         >
@@ -127,33 +134,33 @@ const UrunDuzenle = () => {
               className="kategori-listesi"
             >
               {urunler.map((u, idx) => (
-                // Düzeltilmiş Draggable kısmı
-<Draggable key={u.id} draggableId={u.id} index={idx}>
-  {(provided, snapshot) => ( // Burada snapshot parametresi eklendi
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps} // dragHandleProps eklendi
-      className={`kategori-item ${snapshot.isDragging ? 'dragging' : ''}`}
-    >
-      <div className="kategori-icerik">
-        <img 
-          src={u.resimUrl || 'https://via.placeholder.com/120x120?text=Resim+Yok'} 
-          alt={u.isim} 
-          className="urun-resmi"
-        />
-        <div className="urun-bilgileri">
-          <h3>{u.isim}</h3>
-        </div>
-      </div>
-      <div className="kategori-butonlar">
-        <button onClick={() => setSeciliUrun(u)}>✏️</button>
-        <button onClick={() => urunSil(u.id)}>🗑️</button>
-        <span className="tasima-etiket">☰</span>
-      </div>
-    </div>
-  )}
-</Draggable>
+                <Draggable key={u.id} draggableId={u.id} index={idx}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`kategori-item ${snapshot.isDragging ? 'dragging' : ''}`}
+                    >
+                      <div className="kategori-icerik">
+                        <img 
+                          src={u.resim || 'https://via.placeholder.com/120x120?text=Resim+Yok'} 
+                          alt={u.isim} 
+                          className="urun-resmi"
+                        />
+                        <div className="urun-bilgileri">
+                          <h3>{u.isim}</h3>
+                          <p>₺{u.fiyat}</p>
+                        </div>
+                      </div>
+                      <div className="kategori-butonlar">
+                        <button onClick={() => setSeciliUrun(u)}>✏️</button>
+                        <button onClick={() => urunSil(u.id)}>🗑️</button>
+                        <span className="tasima-etiket">☰</span>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
               ))}
               {provided.placeholder}
             </div>
@@ -166,6 +173,27 @@ const UrunDuzenle = () => {
           <div className="kategori-modal">
             <h3>{seciliUrun.id ? 'Ürün Düzenle' : 'Yeni Ürün Ekle'}</h3>
             
+            <div className="resim-secim">
+              <button 
+                type="button" 
+                className="resim-sec-buton"
+                onClick={async () => {
+                  await fetchGalleryImages();
+                  setShowImageModal(true);
+                }}
+              >
+                {seciliUrun.resim ? 'Resmi Değiştir' : 'Fotoğraf Seç'}
+              </button>
+              
+              {seciliUrun.resim && (
+                <img 
+                  src={seciliUrun.resim} 
+                  alt="Ürün resmi" 
+                  className="resim-onizleme"
+                />
+              )}
+            </div>
+
             <select
               value={seciliUrun.kategoriId}
               onChange={e => setSeciliUrun({ ...seciliUrun, kategoriId: e.target.value })}
@@ -204,14 +232,6 @@ const UrunDuzenle = () => {
               rows={3}
             />
 
-            <input
-              type="text"
-              placeholder="Resim URL"
-              value={seciliUrun.resimUrl}
-              onChange={e => setSeciliUrun({ ...seciliUrun, resimUrl: e.target.value })}
-              className="form-input"
-            />
-
             <div className="modal-actions">
               <button 
                 onClick={seciliUrun.id ? urunGuncelle : urunEkle} 
@@ -226,6 +246,34 @@ const UrunDuzenle = () => {
                 İptal
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showImageModal && (
+        <div className="modal-overlay">
+          <div className="image-select-modal">
+            <h3>Galeriden Fotoğraf Seç</h3>
+            <div className="gallery-grid">
+              {galleryImages.map((img) => (
+                <img
+                  key={img.id}
+                  src={img.image}
+                  alt="Galeri"
+                  onClick={() => {
+                    setSeciliUrun({ ...seciliUrun, resim: img.image });
+                    setShowImageModal(false);
+                  }}
+                  className="gallery-thumbnail"
+                />
+              ))}
+            </div>
+            <button 
+              onClick={() => setShowImageModal(false)}
+              className="iptal-buton"
+            >
+              Kapat
+            </button>
           </div>
         </div>
       )}
