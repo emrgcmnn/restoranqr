@@ -1,4 +1,8 @@
-import React, { useState } from 'react'; 
+import { getAuth, signInAnonymously } from "firebase/auth";
+import React, { useState,useEffect } from 'react'; 
+
+
+
 import { 
   addDoc,
   collection, 
@@ -8,6 +12,10 @@ import { db } from '../firebase'; // Firebase konfigürasyon dosyanızın yolu
 import '../stills/Navbar.css'
 
 const Navbar = () => {
+  useEffect(() => {
+    const auth = getAuth();
+    signInAnonymously(auth).catch(console.error);
+  }, []);
   const [showModal, setShowModal] = useState(false);
   const [masaNumarasi, setMasaNumarasi] = useState('');
   const [showSuccess, setShowSuccess] = useState(false); // Yeni state

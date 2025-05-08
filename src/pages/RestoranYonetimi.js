@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { db } from '../firebase';
 import { 
   collection, 
@@ -12,6 +13,10 @@ import {
 import '../stills/restoranYonetim.css';
 
 const RestoranYonetimi = () => {
+  useEffect(() => {
+    const auth = getAuth();
+    signInAnonymously(auth).catch(console.error);
+  }, []);
   const [bildirimler, setBildirimler] = useState([]);
 
 useEffect(() => {

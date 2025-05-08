@@ -7,34 +7,51 @@ const Kategori = () => {
   const [kategoriler, setKategoriler] = useState([]);
   const [expandedKategori, setExpandedKategori] = useState(null);
   const [urunler, setUrunler] = useState({});
-
   useEffect(() => {
-    // Kategori verisini anlık dinleme ile al
-    const unsubscribe = onSnapshot(collection(db, 'kategoriler'), snapshot => {
-      const veri = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const sirali = veri.sort((a, b) => (a.sira ?? 0) - (b.sira ?? 0));
-      setKategoriler(sirali);
-    });
+    // Firestore'dan kategorileri anlık dinleme ile alır
+    const unsubscribe = onSnapshot(
+      collection(db, 'kategoriler'),
+      snapshot => {
+        const veri = snapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .sort((a, b) => (a.sira ?? 0) - (b.sira ?? 0));
+        setKategoriler(veri);
+      },
+      error => {
+        console.error('Kategori onSnapshot hatası:', error);
+      }
+    );
+    // Cleanup: component unmount olduğunda listener'i kapat
     return () => unsubscribe();
   }, []);
 
   const handleKategoriClick = async kategoriId => {
-    // Aynı kategori seçildiyse kapa
     if (expandedKategori === kategoriId) {
       setExpandedKategori(null);
       return;
     }
     setExpandedKategori(kategoriId);
 
-    // Ürünleri daha önce çekilmediyse al
     if (!urunler[kategoriId]) {
       const q = query(
         collection(db, 'urunler'),
         where('kategoriId', '==', kategoriId)
       );
-      const snap = await getDocs(q);
-      const liste = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setUrunler(prev => ({ ...prev, [kategoriId]: liste }));
+
+      // Ürünler için de onSnapshot kullanıyoruz
+      const unsubscribe = onSnapshot(q, (snap) => {
+        const liste = snap.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .sort((a, b) => (a.sira ?? 0) - (b.sira ?? 0)); // Sıralama burada
+        
+        setUrunler(prev => ({ 
+          ...prev, 
+          [kategoriId]: liste 
+        }));
+      });
+
+      // Cleanup için unsubscribe'ı sakla
+      return () => unsubscribe();
     }
   };
 
@@ -42,15 +59,18 @@ const Kategori = () => {
     <div className="kategori-wrapper">
       {kategoriler.map(item => (
         <div key={item.id} className="kategori-kart">
-          {/* Resim ve başlık */}
-          <div className="img-wrapper" onClick={() => handleKategoriClick(item.id)}>
+          <div
+            className="img-wrapper"
+            onClick={() => handleKategoriClick(item.id)}
+          >
             <img
-              src={item.resimUrl}
+              src={item.resim}
               alt={item.isim}
               className="kategori-img"
               onError={e => {
-                e.target.onerror = null;
-                e.target.src = 'https://via.placeholder.com/200x120?text=Resim+yok';
+                console.error('Resim yüklenemedi:', item.id, item.resim);
+                e.target.src =
+                  'https://via.placeholder.com/200x120?text=Resim+yok';
               }}
             />
             <div className="kategori-baslik-overlay">
@@ -58,7 +78,6 @@ const Kategori = () => {
             </div>
           </div>
 
-          {/* Açılır ürün listesi */}
           {expandedKategori === item.id && (
             <div className="urunler-container">
               {urunler[item.id] ? (
@@ -66,12 +85,17 @@ const Kategori = () => {
                   urunler[item.id].map(urun => (
                     <div key={urun.id} className="urun-kart">
                       <img
-                        src={urun.resimUrl}
+                        src={urun.resim}
                         alt={urun.isim}
                         className="urun-img"
                         onError={e => {
-                          e.target.onerror = null;
-                          e.target.src = 'https://via.placeholder.com/100?text=Yok';
+                          console.error(
+                            'Ürün resmi yüklenemedi:',
+                            urun.id,
+                            urun.resim
+                          );
+                          e.target.src =
+                            'https://via.placeholder.com/100?text=Yok';
                         }}
                       />
                       <div className="urun-bilgiler">
@@ -84,7 +108,9 @@ const Kategori = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="bos-mesaj">Bu kategoriye ait ürün bulunamadı.</p>
+                  <p className="bos-mesaj">
+                    Bu kategoriye ait ürün bulunamadı.
+                  </p>
                 )
               ) : (
                 <p className="bos-mesaj">Yükleniyor...</p>
