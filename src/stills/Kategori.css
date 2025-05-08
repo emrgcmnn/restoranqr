@@ -1,171 +1,131 @@
-/* TEMEL YAPI */
+/* Wrapper: tek kolon, ortalanmış, yan boşluklu */
 .kategori-wrapper {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
-  display: grid;
-  gap: 25px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* KATEGORİ KARTI */
+/* Her kategori kartı */
 .kategori-kart {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
 .kategori-kart:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
 }
 
-/* RESİM ALANI */
+/* Resim ve başlık overlay */
 .img-wrapper {
   position: relative;
   cursor: pointer;
-  aspect-ratio: 16/9; /* Resim oranını koru */
 }
 
 .kategori-img {
   width: 100%;
-  height: 100%;
+  height: 200px;          /* Sabit yüksekliğe göre */
   object-fit: cover;
-  display: block;
-  background: #f0f0f0; /* Resim yüklenene kadar arkaplan */
 }
 
-/* BAŞLIK OVERLAY */
 .kategori-baslik-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  padding: 20px;
-  background: linear-gradient(0deg, rgba(0,0,0,0.7) 20%, transparent);
-  color: white;
-  font-size: 1.4rem;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* ÜRÜNLER KONTEYNIR */
-.urunler-container {
-  padding: 15px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  display: grid;
-  gap: 12px;
-}
-
-/* ÜRÜN KARTI */
-.urun-kart {
+  width: 100%;
+  height: 40%;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
+  justify-content: center;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
 }
 
-.urun-kart:hover {
-  transform: translateX(5px);
+/* Açılır ürünler konteyneri */
+.urunler-container {
+  padding: 1rem;
+  background: #fafafa;
+  border-top: 1px solid #eee;
 }
 
-/* ÜRÜN RESİM */
+/* Ürün kartı: yatay layout */
+.urun-kart {
+  /* height: 200px;  <-- Bu satırı kaldır ya da yorum satırı yap */
+  display: flex;
+  align-items: stretch;  /* Kart içi elemanların resme kadar uzanmasını sağlar */
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+
+/* Ürün resmi: kare, konteyner yüksekliğine uyumlu */
 .urun-img {
-  width: 90px;
-  height: 90px;
-  flex-shrink: 0;
+  height: 85px;      /* Kart yüksekliği de bu kadar olacak */
+  aspect-ratio: 1 / 1;   /* Kare form için; istersen kaldırıp width: auto yap */
   object-fit: cover;
   border-radius: 6px;
-  border: 1px solid #dee2e6;
-  background: #f8f9fa;
+  flex-shrink: 0;        /* Kart küçülürken resmin kırışmasını engeller */
 }
 
-/* ÜRÜN BİLGİLERİ */
+
+/* Bilgiler: dikey ortalı ve sütun */
 .urun-bilgiler {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Yatay doğrultuda ortalar */
   flex: 1;
-  min-width: 0; /* Uzun metinler için taşma önleme */
 }
 
+
+/* İsim, fiyat, özellikler */
 .urun-isim {
   font-size: 1.1rem;
-  font-weight: 500;
-  color: #2d3436;
-  margin-bottom: 6px;
-  line-height: 1.3;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
 }
 
 .urun-fiyat {
-  color: #27ae60;
-  font-weight: 600;
-  font-size: 1.05rem;
-  margin-bottom: 5px;
+  color: #28a745;
+  font-weight: 500;
+  margin: 0 0 0.3rem 0;
 }
 
 .urun-ozellik {
-  color: #636e72;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  font-style: italic;
+  color: #555;
   margin: 0;
 }
 
-/* DURUM MESAJLARI */
+/* Yükleniyor / boş mesaj */
 .bos-mesaj {
-  color: #7f8c8d;
+  color: #777;
   font-style: italic;
-  text-align: center;
-  padding: 20px 0;
+  margin: 0.5rem 0;
 }
 
-/* MOBIL UYUMLULUK */
+/* Responsive: mobilde kartlar içerikte kalır */
 @media (max-width: 768px) {
-  .kategori-wrapper {
-    padding: 15px;
-    gap: 20px;
+  .kategori-img {
+    height: 150px;
   }
-
-  .img-wrapper {
-    aspect-ratio: 3/2;
-  }
-
-  .kategori-baslik-overlay {
-    font-size: 1.2rem;
-    padding: 15px;
-  }
-
   .urun-kart {
     flex-direction: column;
     align-items: flex-start;
-    padding: 12px;
   }
-
   .urun-img {
     width: 100%;
-    height: auto;
-    max-height: 150px;
-  }
-
-  .urun-bilgiler {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .kategori-baslik-overlay {
-    font-size: 1.1rem;
-  }
-
-  .urun-isim {
-    font-size: 1rem;
-  }
-
-  .urun-fiyat {
-    font-size: 0.95rem;
+    max-height: none;
   }
 }
