@@ -1,66 +1,72 @@
-/* Ana Wrapper */
+/* TEMEL YAPI */
 .kategori-wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 20px;
   display: grid;
-  gap: 2rem;
+  gap: 25px;
 }
 
-/* Kategori Kartı */
+/* KATEGORİ KARTI */
 .kategori-kart {
-  background: #fff;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .kategori-kart:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Resim ve Başlık Alanı */
+/* RESİM ALANI */
 .img-wrapper {
   position: relative;
   cursor: pointer;
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
+  aspect-ratio: 16/9; /* Resim oranını koru */
 }
 
 .kategori-img {
   width: 100%;
-  min-height: 180px;
+  height: 100%;
   object-fit: cover;
-  aspect-ratio: 16/9;
+  display: block;
+  background: #f0f0f0; /* Resim yüklenene kadar arkaplan */
 }
 
+/* BAŞLIK OVERLAY */
 .kategori-baslik-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1.2rem;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 20px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.7) 20%, transparent);
   color: white;
   font-size: 1.4rem;
   font-weight: 600;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Ürünler Container */
+/* ÜRÜNLER KONTEYNIR */
 .urunler-container {
-  padding: 1.5rem;
+  padding: 15px;
   background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: grid;
+  gap: 12px;
 }
 
-/* Ürün Kartı */
+/* ÜRÜN KARTI */
 .urun-kart {
   display: flex;
-  gap: 1.2rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: white;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
@@ -70,77 +76,89 @@
   transform: translateX(5px);
 }
 
-/* Ürün Resmi */
-.urun-resmi {
-  width: 100px;
-  height: auto;
-  aspect-ratio: 1/1;
+/* ÜRÜN RESİM */
+.urun-img {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
   object-fit: cover;
   border-radius: 6px;
-  transition: opacity 0.3s ease;
+  border: 1px solid #dee2e6;
+  background: #f8f9fa;
 }
 
-.urun-resmi:hover {
-  opacity: 0.9;
-}
-
-/* Ürün Bilgileri */
-.urun-detaylari {
+/* ÜRÜN BİLGİLERİ */
+.urun-bilgiler {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-width: 0; /* Uzun metinler için taşma önleme */
 }
 
 .urun-isim {
   font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
+  font-weight: 500;
   color: #2d3436;
+  margin-bottom: 6px;
+  line-height: 1.3;
 }
 
 .urun-fiyat {
   color: #27ae60;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.05rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
 }
 
 .urun-ozellik {
   color: #636e72;
   font-size: 0.95rem;
   line-height: 1.4;
-  margin: 0.2rem 0;
+  margin: 0;
 }
 
-/* Mesajlar */
-.bos-mesaj,
-.urun-yok {
+/* DURUM MESAJLARI */
+.bos-mesaj {
   color: #7f8c8d;
+  font-style: italic;
   text-align: center;
-  padding: 1rem;
+  padding: 20px 0;
 }
 
-/* Responsive Tasarım */
+/* MOBIL UYUMLULUK */
 @media (max-width: 768px) {
   .kategori-wrapper {
-    gap: 1.5rem;
-    padding: 0.8rem;
+    padding: 15px;
+    gap: 20px;
   }
 
-  .kategori-img {
+  .img-wrapper {
     aspect-ratio: 3/2;
+  }
+
+  .kategori-baslik-overlay {
+    font-size: 1.2rem;
+    padding: 15px;
   }
 
   .urun-kart {
     flex-direction: column;
-    gap: 0.8rem;
-    padding: 1rem;
+    align-items: flex-start;
+    padding: 12px;
   }
 
-  .urun-resmi {
+  .urun-img {
     width: 100%;
-    max-height: 200px;
+    height: auto;
+    max-height: 150px;
+  }
+
+  .urun-bilgiler {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .kategori-baslik-overlay {
+    font-size: 1.1rem;
   }
 
   .urun-isim {
@@ -149,12 +167,5 @@
 
   .urun-fiyat {
     font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .kategori-baslik-overlay {
-    font-size: 1.2rem;
-    padding: 1rem;
   }
 }
