@@ -9,77 +9,89 @@ const Kategori = () => {
   const [urunler, setUrunler] = useState({});
 
   useEffect(() => {
-    return onSnapshot(collection(db, 'kategoriler'), snapshot => {
-      const liste = snapshot.docs.map(doc => ({
-        id: doc.id,
-        isim: doc.data().isim,
-        resim: doc.data().resim, // resimUrl yerine resim kullanılıyor
-        sira: doc.data().sira ?? 0
-      })).sort((a,b) => a.sira - b.sira);
-      setKategoriler(liste);
-    });
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'kategoriler')),
+      snapshot => {
+        const veri = snapshot.docs.map(doc => ({ 
+          id: doc.id, 
+          ...doc.data(),
+          // Resim URL'sini kontrol et
+          resimUrl: doc.data().resimUrl || 'https://via.placeholder.com/200x120?text=Resim+yok'
+        }));
+        const sirali = veri.sort((a, b) => (a.sira ?? 0) - (b.sira ?? 0));
+        setKategoriler(sirali);
+      }
+    );
+    return () => unsubscribe();
   }, []);
 
-  const handleKategoriClick = async (kategoriId) => {
-    if (expandedKategori === kategoriId) { 
-      setExpandedKategori(null); 
-      return; 
+  const handleKategoriClick = async kategoriId => {
+    if (expandedKategori === kategoriId) {
+      setExpandedKategori(null);
+      return;
     }
     setExpandedKategori(kategoriId);
-    
+
     if (!urunler[kategoriId]) {
-      const snap = await getDocs(query(
-        collection(db,'urunler'), 
-        where('kategoriId','==',kategoriId)
-      ));
-      const list = snap.docs.map(doc => ({
+      const q = query(
+        collection(db, 'urunler'),
+        where('kategoriId', '==', kategoriId)
+      );
+      const snap = await getDocs(q);
+      const liste = snap.docs.map(doc => ({
         id: doc.id,
-        isim: doc.data().isim,
-        fiyat: doc.data().fiyat,
-        resimUrl: doc.data().resimUrl,
-        ozellikler: doc.data().ozellikler
+        ...doc.data(),
+        // Ürün resim URL'sini kontrol et
+        resimUrl: doc.data().resimUrl || 'https://via.placeholder.com/100?text=Yok'
       }));
-      setUrunler(prev => ({ ...prev, [kategoriId]: list }));
+      setUrunler(prev => ({ ...prev, [kategoriId]: liste }));
     }
   };
 
   return (
     <div className="kategori-wrapper">
-      {kategoriler.map(kat => (
-        <div key={kat.id} className="kategori-kart">
-          <div className="img-wrapper" onClick={() => handleKategoriClick(kat.id)}>
-            {/* resimUrl yerine resim kullanılıyor */}
-            <img 
-              src={kat.resim || 'https://via.placeholder.com/800x400?text=Resim+Yok'} 
-              alt={kat.isim} 
-              className="kategori-img" 
-              onError={e => e.target.src = 'https://via.placeholder.com/800x400?text=Hata'} 
+      {kategoriler.map(item => (
+        <div key={item.id} className="kategori-kart">
+          <div className="img-wrapper" onClick={() => handleKategoriClick(item.id)}>
+            <img
+              src={item.resimUrl}
+              alt={item.isim}
+              className="kategori-img"
+              onError={e => {
+                e.target.onerror = null;
+                e.target.src = 'https://via.placeholder.com/200x120?text=Resim+yok';
+              }}
             />
-            <div className="kategori-baslik-overlay">{kat.isim}</div>
+            <div className="kategori-baslik-overlay">
+              {item.isim}
+            </div>
           </div>
 
-          {expandedKategori === kat.id && (
+          {expandedKategori === item.id && (
             <div className="urunler-container">
-              {urunler[kat.id]?.length > 0 ? (
-                urunler[kat.id].map(urun => (
+              {urunler[item.id] ? (
+                urunler[item.id].map(urun => (
                   <div key={urun.id} className="urun-kart">
-                    <img 
-                      src={urun.resimUrl || 'https://via.placeholder.com/300x200?text=Ürün+Yok'} 
-                      alt={urun.isim} 
-                      className="urun-resmi" 
-                      onError={e => e.target.src = 'https://via.placeholder.com/300x200?text=Hata'} 
+                    <img
+                      src={urun.resimUrl}
+                      alt={urun.isim}
+                      className="urun-img"
+                      onError={e => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://via.placeholder.com/100?text=Yok';
+                      }}
                     />
-                    <div className="urun-detaylari">
-                      <h3 className="urun-isim">{urun.isim}</h3>
-                      <p className="urun-fiyat">₺{urun.fiyat?.toFixed(2)}</p>
-                      {urun.ozellikler?.split('\n').map((o,i) => (
-                        <p key={i} className="urun-ozellik">• {o.trim()}</p>
-                      ))}
+                    <div className="urun-bilgiler">
+                      <p className="urun-isim">{urun.isim}</p>
+                      <p className="urun-fiyat">{urun.fiyat} ₺</p>
+                      {urun.ozellikler && (
+                        <p className="urun-ozellik">• {urun.ozellikler}</p>
+                      )}
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="urun-yok">Bu kategoride ürün bulunamadı</p>
+                <p className="bos-mesaj">Yükleniyor...</p>
               )}
             </div>
           )}
