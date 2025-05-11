@@ -23,8 +23,7 @@ const SepetMenu = ({ isOpen, onClose, sepetItems = [] }) => {
             Toplam: ${toplam}
           </p>
           <div className="sepet-actions">
-            <button className="close-button" onClick={onClose}>Kapat</button>
-            <button className="checkout-button">Ödeme Yap</button>
+            <button className="checkout-button">Sipariş Oluştur</button>
           </div>
         </>
       ) : (

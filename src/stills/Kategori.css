@@ -57,9 +57,7 @@
   border-top: 1px solid #eee;
 }
 
-/* Ürün kartı: yatay layout */
 .urun-kart {
-  /* height: 200px;  <-- Bu satırı kaldır ya da yorum satırı yap */
   display: flex;
   align-items: stretch;  /* Kart içi elemanların resme kadar uzanmasını sağlar */
   gap: 1rem;
@@ -67,6 +65,21 @@
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  justify-content: space-between; /* Bu satır eklenerek öğeler arasındaki boşluğu düzenliyoruz */
+}
+
+/* Ekle butonunu ortalamak için */
+.ekle-button {
+  background-color: #4CAF50; /* Yeşil */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  align-self: center; /* Yüksekliği otomatik hizalar */
+  margin-left: auto;  /* Sağ tarafa yaslamak için */
 }
 
 
@@ -115,21 +128,18 @@
   margin: 0.5rem 0;
 }
 
-/* Responsive: mobilde kartlar içerikte kalır */
-@media (max-width: 768px) {
-  .kategori-img {
-    height: 150px;
-  }
-  .urun-kart {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .urun-img {
-    width: 100%;
-    max-height: none;
-  }
+.urun-kart {
+  display: flex;
+  align-items: stretch;  /* Kart içi elemanların resme kadar uzanmasını sağlar */
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  justify-content: space-between; /* Bu satır eklenerek öğeler arasındaki boşluğu düzenliyoruz */
 }
 
+/* Ekle butonunu ortalamak için */
 .ekle-button {
   background-color: #4CAF50; /* Yeşil */
   color: white;
@@ -140,7 +150,10 @@
   font-weight: bold;
   transition: background-color 0.3s ease;
   align-self: center; /* Yüksekliği otomatik hizalar */
+  margin-left: auto;  /* Sağ tarafa yaslamak için */
 }
+
+
 
 .ekle-button:hover {
   background-color: #45a049;

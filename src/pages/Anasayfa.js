@@ -5,7 +5,7 @@ import Kategori from '../component/Kategori';
 import Navbar from '../component/Navbar'; // Navbar import edildi
 
 function Anasayfa() {
-  const [kategoriler, setKategoriler] = useState([]);
+  const [setKategoriler] = useState([]);
 
   useEffect(() => {
     const veriGetir = async () => {

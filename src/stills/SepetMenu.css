@@ -66,24 +66,15 @@
     transition: background-color 0.3s;
   }
   
-  .close-button {
-    background-color: #e53935;
-    color: white;
-  }
+
   
-  .close-button:hover {
-    background-color: #c62828;
-  }
   
   .checkout-button {
     background-color: #43a047;
     color: white;
   }
   
-  .checkout-button:hover {
-    background-color: #388e3c;
-  }
-  
+ 
   .empty-cart {
     text-align: center;
     color: #999;

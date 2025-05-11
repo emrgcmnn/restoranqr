@@ -6,7 +6,6 @@ import {
   query, 
   where, 
   onSnapshot, 
-  updateDoc, 
   doc, 
   deleteDoc 
 } from 'firebase/firestore'; // ✅ Doğru import
