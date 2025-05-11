@@ -129,3 +129,19 @@
     max-height: none;
   }
 }
+
+.ekle-button {
+  background-color: #4CAF50; /* Yeşil */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  align-self: center; /* Yüksekliği otomatik hizalar */
+}
+
+.ekle-button:hover {
+  background-color: #45a049;
+}

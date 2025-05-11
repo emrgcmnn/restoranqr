@@ -83,29 +83,26 @@ const Kategori = () => {
               {urunler[item.id] ? (
                 urunler[item.id].length > 0 ? (
                   urunler[item.id].map(urun => (
-                    <div key={urun.id} className="urun-kart">
-                      <img
-                        src={urun.resim}
-                        alt={urun.isim}
-                        className="urun-img"
-                        onError={e => {
-                          console.error(
-                            'Ürün resmi yüklenemedi:',
-                            urun.id,
-                            urun.resim
-                          );
-                          e.target.src =
-                            'https://via.placeholder.com/100?text=Yok';
-                        }}
-                      />
-                      <div className="urun-bilgiler">
-                        <p className="urun-isim">{urun.isim}</p>
-                        <p className="urun-fiyat">{urun.fiyat} ₺</p>
-                        {urun.ozellikler && (
-                          <p className="urun-ozellik">• {urun.ozellikler}</p>
-                        )}
-                      </div>
-                    </div>
+                    <div className="urun-kart">
+  <img
+    src={urun.resim}
+    alt={urun.isim}
+    className="urun-img"
+    onError={e => {
+      console.error('Ürün resmi yüklenemedi:', urun.id, urun.resim);
+      e.target.src = 'https://via.placeholder.com/100?text=Yok';
+    }}
+  />
+  <div className="urun-bilgiler">
+    <p className="urun-isim">{urun.isim}</p>
+    <p className="urun-fiyat">{urun.fiyat} ₺</p>
+    {urun.ozellikler && (
+      <p className="urun-ozellik">• {urun.ozellikler}</p>
+    )}
+  </div>
+  <button className="ekle-button">Ekle</button>
+</div>
+
                   ))
                 ) : (
                   <p className="bos-mesaj">

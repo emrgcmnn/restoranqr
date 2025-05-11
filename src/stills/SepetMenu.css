@@ -1,0 +1,118 @@
+.sepet-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; /* Bu çok önemli */
+    padding: 1.5rem 1rem; /* sağdan soldan çok padding varsa azalt */
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .sepet-menu h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    color: #2e7d32;
+    text-align: center;
+  }
+  
+  .sepet-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sepet-menu li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px dashed #ddd;
+  }
+  
+  .sepet-menu li:last-child {
+    border-bottom: none;
+  }
+  
+  .item-name {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #444;
+  }
+  
+  .item-price {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #2e7d32;
+  }
+  
+  .sepet-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .sepet-menu button {
+    padding: 0.7rem 1.4rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .close-button {
+    background-color: #e53935;
+    color: white;
+  }
+  
+  .close-button:hover {
+    background-color: #c62828;
+  }
+  
+  .checkout-button {
+    background-color: #43a047;
+    color: white;
+  }
+  
+  .checkout-button:hover {
+    background-color: #388e3c;
+  }
+  
+  .empty-cart {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    margin: 2rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    .sepet-menu {
+      padding: 1rem 0.5rem;
+    }
+  
+    .sepet-menu li {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .item-price {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+  
+    .sepet-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .sepet-menu button {
+      width: 100%;
+    }
+  }
+  
